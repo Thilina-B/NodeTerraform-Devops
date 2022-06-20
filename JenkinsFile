@@ -7,7 +7,12 @@ pipeline {
 
     agent any
     stages {
-           
+
+            stage('Cloning our Git') {
+                steps {
+                git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
+                }
+            }
          
             stage('Docker build image'){
 			steps{
