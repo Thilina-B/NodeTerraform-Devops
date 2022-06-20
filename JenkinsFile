@@ -1,16 +1,13 @@
 pipeline {
     environment {
     dockerHome = tool 'myDocker'
-    PATH = "$dockerHome/bin:$PATH"
+    mavenHome = tool 'myMaven'
+	PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
     }
 
     agent any
     stages {
-           stage('Checkout'){
-			steps{
-				sh 'docker version'
-                }
-            }
+           
          
             stage('Docker build image'){
 			steps{
