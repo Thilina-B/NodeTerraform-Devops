@@ -1,8 +1,46 @@
-node {
-	stage('Build') {
-		echo "Build"
-	}
-	stage('Test') {
-		echo "Test"
-	}
-}
+pipeline {
+    environment {
+    dockerHome = tool 'myDocker'
+    PATH = "$dockerHome/bin:$PATH"
+    }
+
+    agent any
+    stages {
+           stage('Checkout'){
+			steps{
+				sh 'docker version'
+                }
+            }
+            stage('Cloning our Git') {
+                steps {
+                    git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
+                }
+            }
+            stage('Docker build image'){
+			steps{
+			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
+				script{
+					dockerImage = docker.build("thilinarat/currency-exchange-devops:$BUILD_NUMBER")
+				}
+			}
+		}
+            
+
+        	stage('Docker push image'){
+			steps{
+				script{
+					docker.withRegistry('','dockerhub'){
+						dockerImage.push()
+						// dockerImage.push('latest')
+					}
+				}
+			}
+		}
+
+            stage('Cleaning Up') {
+                steps{
+                  sh "docker rmi --force $registry:$BUILD_NUMBER"
+                }
+            }
+        }
+    }
