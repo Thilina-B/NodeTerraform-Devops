@@ -1,44 +1,45 @@
-pipeline {
-        agent any
 
-        environment{
-            registry = "thilinarat/nodes-jenkins"
-            registryCredential = 'dockerhub'
-            dockerImage = ''
-        }
-        stages{
-            stage('Cloning our Git') {
-                steps {
-                    git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
-                }
-            }
-            stage('Docker build image'){
-                steps{
-                // premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
-                    script{
-                        dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                    }
-                }
-            }
-            stage('Docker push image'){
-                steps{
-                    script{
-                        docker.withRegistry('', registryCredential) {
-                            dockerImage.push()
-                    }
-                }
+pipeline {
+	agent any
+
+	environment{
+	    registry = "thilinarat/nodes-jenkins"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+	}
+	stages{
+		stage('Cloning our Git') {
+            steps {
+                git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
             }
         }
-        post{
-            always{
-                echo "Run always"
-            }
-            success{
-                echo "Run on success"
-            }
-            failure{
-                echo "Run on failure"
-            }
-        }
+		stage('Docker build image'){
+			steps{
+			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
+				script{
+				    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+				}
+			}
+		}
+		stage('Docker push image'){
+			steps{
+				script{
+				    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+				    }
+			    }
+		    }
+	    }
     }
+	post{
+		always{
+			echo "Run always"
+		}
+		success{
+			echo "Run on success"
+		}
+		failure{
+			echo "Run on failure"
+		}
+	}
 }
