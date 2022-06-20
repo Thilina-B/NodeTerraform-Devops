@@ -2,9 +2,9 @@
 pipeline {
 	agent any
 	environment{
-	    registry = "thilinarat/nodes-jenkins"
-        registryCredential = 'dockerhub'
-        dockerImage = ''
+	    dockerHome = tool 'myDocker'
+		mavenHome = tool 'myMaven'
+		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
 	}
 	stages{
 		// stage('Cloning our Git') {
@@ -16,16 +16,18 @@ pipeline {
 			steps{
 			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
 				script{
-				    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+				   dockerImage = docker.build("thilinarat/nodes-jenkins:${BUILD_NUMBER}")
 				}
 			}
 		}
 		stage('Docker push image'){
 			steps{
 				script{
-				    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-				    }
+				   script{
+					docker.withRegistry('','dockerhub'){
+						dockerImage.push()
+					}
+				}
 			    }
 		    }
 	    }
