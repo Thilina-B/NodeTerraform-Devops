@@ -7,7 +7,11 @@ pipeline {
 		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
 	}
 	stages{
-	
+		stage('Cloning our Git') {
+            steps {
+                git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
+            }
+        }
 		stage('Docker build image'){
 			steps{
 			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
