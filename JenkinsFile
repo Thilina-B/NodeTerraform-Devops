@@ -1,19 +1,24 @@
 pipeline {
     environment {
-    dockerHome = tool 'myDocker'
-    mavenHome = tool 'myMaven'
-	PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+    registry = "thilinarat/nodes-jenkins"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
     }
 
     agent any
     stages {
 
+            stage('Cloning our Git') {
+                steps {
+                git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
+                }
+            }
          
             stage('Docker build image'){
 			steps{
 			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
 				script{
-					dockerImage = docker.build("thilinarat/nodes-jenkins:latest")
+					 dockerImage = docker.build registry + ":$BUILD_NUMBER"
 				}
 			}
 		}
@@ -22,10 +27,8 @@ pipeline {
         	stage('Docker push image'){
 			steps{
 				script{
-					docker.withRegistry('','dockerhub'){
-						dockerImage.push()
-						// dockerImage.push('latest')
-					}
+					docker.withRegistry('', registryCredential) {
+                    dockerImage.push()
 				}
 			}
 		}
@@ -37,3 +40,4 @@ pipeline {
             }
         }
     }
+}
