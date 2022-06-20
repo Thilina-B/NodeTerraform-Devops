@@ -9,7 +9,7 @@ pipeline {
 	stages{
 		stage('Cloning our Git') {
             steps {
-                git 'git@github.com:Thilina-B/NodeTerraform-Devops.git'
+                git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
             }
         }
 		stage('Docker build image'){
