@@ -19,29 +19,29 @@ pipeline {
                 git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
             }
         }
-		stage('Docker build image'){
-			steps{
-			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
-				script{
-				   dockerImage = docker.build("thilinarat/nodes-jenkins:${BUILD_NUMBER}")
-				}
-			}
-		}
-		stage('Docker push image'){
-			steps{
-				script{
-				   script{
-					docker.withRegistry('','dockerhub'){
-						dockerImage.push()
-						dockerImage.push("latest")
-					}
-				}
-			    }
-		    }
-	    }
+		// stage('Docker build image'){
+		// 	steps{
+		// 	// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
+		// 		script{
+		// 		   dockerImage = docker.build("thilinarat/nodes-jenkins:${BUILD_NUMBER}")
+		// 		}
+		// 	}
+		// }
+		// stage('Docker push image'){
+		// 	steps{
+		// 		script{
+		// 		   script{
+		// 			docker.withRegistry('','dockerhub'){
+		// 				dockerImage.push()
+		// 				dockerImage.push("latest")
+		// 			}
+		// 		}
+		// 	    }
+		//     }
+	    // }
 		stage('Apply Kubernetes files') {
 			steps{
-				withKubeConfig([credentialsId: 'AWS_IAM_USER', serverUrl: 'https://4853312EF33B3ECDCC54D2961DCB8716.gr7.us-east-1.eks.amazonaws.com']) {
+				withKubeConfig([credentialsId: 'AWS_CREDENTIALS', serverUrl: 'https://4853312EF33B3ECDCC54D2961DCB8716.gr7.us-east-1.eks.amazonaws.com']) {
 					sh 'kubectl apply -f deployment.yml'
 				}
 			}
