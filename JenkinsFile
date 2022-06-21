@@ -40,9 +40,11 @@ pipeline {
 		    }
 	    }
 		stage('Apply Kubernetes files') {
-    		withKubeConfig([credentialsId: 'AWS_IAM_USER', serverUrl: 'https://4853312EF33B3ECDCC54D2961DCB8716.gr7.us-east-1.eks.amazonaws.com']) {
-      			sh 'kubectl apply -f deployment.yml'
-    		}
+			steps{
+				withKubeConfig([credentialsId: 'AWS_IAM_USER', serverUrl: 'https://4853312EF33B3ECDCC54D2961DCB8716.gr7.us-east-1.eks.amazonaws.com']) {
+					sh 'kubectl apply -f deployment.yml'
+				}
+			}
   		}
     }
 	post{
