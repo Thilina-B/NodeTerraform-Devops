@@ -19,25 +19,25 @@ pipeline {
                 git 'https://github.com/Thilina-B/NodeTerraform-Devops.git'
             }
         }
-		// stage('Docker build image'){
-		// 	steps{
-		// 	// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
-		// 		script{
-		// 		   dockerImage = docker.build("thilinarat/nodes-jenkins:${BUILD_NUMBER}")
-		// 		}
-		// 	}
-		// }
-		// stage('Docker push image'){
-		// 	steps{
-		// 		script{
-		// 		   script{
-		// 			docker.withRegistry('','dockerhub'){
-		// 				dockerImage.push()
-		// 			}
-		// 		}
-		// 	    }
-		//     }
-	    // }
+		stage('Docker build image'){
+			steps{
+			// premitive way of building docker is =====	"docker build -t thilinarat/currency-exchange-devops:$env.BUILD_TAG"
+				script{
+				   dockerImage = docker.build("thilinarat/nodes-jenkins:${BUILD_NUMBER}")
+				}
+			}
+		}
+		stage('Docker push image'){
+			steps{
+				script{
+				   script{
+					docker.withRegistry('','dockerhub'){
+						dockerImage.push()
+					}
+				}
+			    }
+		    }
+	    }
     }
 	post{
 		always{
